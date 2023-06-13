@@ -1,115 +1,37 @@
+import { useRootNavigationState } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
+import { AuthStore, initStore } from "../store";
 import React, { useState } from "react";
-import { useRouter } from "expo-router";
-import { Dimensions, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 
+const Index = () => {
 
-const { height } = Dimensions.get("window");
+  const segments = useSegments();
+  const router = useRouter();
 
-export default function Welcome() {
-    const router = useRouter ();
+  const navigationState = useRootNavigationState();
 
-    function Login () {
-        router.replace('./login')
+  const { initialized, isLoggedIn } = AuthStore.useState();
+
+  React.useEffect(() => {
+    if (!navigationState?.key || !initialized) return;
+
+    const inAuthGroup = segments[0] === "(auth)";
+
+    if (
+      // If the user is not signed in and the initial segment is not anything
+      //  segment is not anything in the auth group.
+      !isLoggedIn &&
+      !inAuthGroup
+    ) {
+      // Redirect to the login page.
+      router.replace("/login");
+    } else if (isLoggedIn) {
+      // go to tabs root.
+      router.replace("/(tabs)/home");
     }
+  }, [segments, navigationState?.key, initialized]);
 
-    function NewUser () {
-        router.replace('./newUser')
-    }
-
-  return (
-    <SafeAreaView>
-      <View>
-        <ImageBackground
-          style={{
-            height: height / 2,
-            
-          }}
-          resizeMode="contain"
-          source={require("../assets/images/welcome-img.png")}
-        />
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingTop: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 29,
-              color: "#1C3C6C",
-              textAlign: "center",
-            }}
-          >
-            Gerenciamento simplificado de veículos
-          </Text>
-
-          <Text
-            style={{
-              fontSize: 15,
-              color: "black",
-              textAlign: "center",
-              marginTop: 12,
-            }}
-          >
-            Gestão de veículos de forma profissional e localização em tempo real.
-          </Text>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 8,
-            paddingTop: 70,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            onPress={Login}
-            style={{
-              backgroundColor: "#1C3C6C",
-              paddingVertical: 12,
-              paddingHorizontal: 16,
-              width: "48%",
-              borderRadius: 4,
-              shadowColor: "#1C3C6C",
-              shadowOffset: {
-                width: 0,
-                height: 8,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 18,
-                textAlign: "center",
-              }}
-            >
-              Autenticar
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={NewUser}
-            style={{
-              paddingVertical: 12,
-              paddingHorizontal: 16,
-              width: "48%",
-              borderRadius: 4,
-            }}
-          >
-            <Text
-              style={{
-                color: "black",
-                fontSize: 18,
-                textAlign: "center",
-              }}
-            >
-              Registrar
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-}
+  return <View>{!navigationState?.key ? <Text>LOADING...</Text> : <></>}</View>;
+};
+export default Index;
