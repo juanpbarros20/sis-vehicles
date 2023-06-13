@@ -4,7 +4,7 @@ export default function Layout() {
   return (
     <Stack screenOptions={{ headerShown: false, title: "" }}>
       <Stack.Screen
-        name="Vehicles"
+        name="vehicleList"
         options={{ title: "Vehicles" }} />
     </Stack>
   );
