@@ -1,4 +1,5 @@
-import { Store, registerInDevtools } from 'pullstate';
+import { Store } from 'pullstate';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -46,14 +47,9 @@ subscribeToAuthStateChanges();
 
 export const appSignIn = async (email, password) => {
   try {
-    if (auth.currentUser) {
-      // Se o usuário já está autenticado, retorne as informações do usuário atual
-      return { user: auth.currentUser };
-    }
-
     const resp = await signInWithEmailAndPassword(auth, email, password);
     setAuthenticatedUser(resp.user);
-    return { user: auth.currentUser };
+    return { user: resp.user };
   } catch (e) {
     return { error: e };
   }
@@ -93,4 +89,44 @@ export const appSignUp = async (email, password, displayName) => {
   }
 };
 
-registerInDevtools({ AuthStore });
+// Funções para armazenar e recuperar o token de autenticação utilizando AsyncStorage
+const storeAuthToken = async (token) => {
+  try {
+    await AsyncStorage.setItem('authToken', token);
+  } catch (error) {
+    console.log('Error storing auth token:', error);
+  }
+};
+
+const getAuthToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem('authToken');
+    return token;
+  } catch (error) {
+    console.log('Error getting auth token:', error);
+    return null;
+  }
+};
+
+// Chamada inicial para recuperar o token de autenticação e definir o usuário autenticado
+const initAuthenticatedUser = async () => {
+  const token = await getAuthToken();
+
+  if (token) {
+    try {
+      const userCredential = await signInWithCustomToken(auth, token);
+      const user = userCredential.user;
+      setAuthenticatedUser(user);
+    } catch (error) {
+      console.log('Error initializing authenticated user:', error);
+      setAuthenticatedUser(null);
+    }
+  } else {
+    setAuthenticatedUser(null);
+  }
+};
+
+initAuthenticatedUser();
+
+// Exporte as funções adicionais que você utiliza na sua aplicação
+// ...

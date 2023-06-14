@@ -1,5 +1,5 @@
 import { Link, Redirect, Stack, useRouter } from "expo-router";
-import { View, Button, Pressable, Text, TouchableOpacity, SafeAreaView} from "react-native";
+import { View, Button, Pressable, Text, TouchableOpacity, SafeAreaView, Alert} from "react-native";
 import { AuthStore, appSignOut } from "../../../store";
 
 

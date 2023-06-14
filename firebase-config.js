@@ -1,8 +1,8 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, initializeAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Configurações do seu projeto Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBxMuOjJubaPLPSONsYpuVVcDVtkGkruIU",
   authDomain: "app-veiculos-16c3e.firebaseapp.com",
@@ -12,11 +12,11 @@ const firebaseConfig = {
   appId: "1:487218248391:web:d449540e35653bf5f41ce2"
 };
 
+// Inicialize o app Firebase
 const app = initializeApp(firebaseConfig);
+
+// Obtenha as instâncias dos serviços necessários
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-// Definir persistência como armazenamento local (browserLocalPersistence)
-setPersistence(auth, browserLocalPersistence);
 
 export { app, auth, db };

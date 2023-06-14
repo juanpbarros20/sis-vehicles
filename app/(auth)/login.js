@@ -1,19 +1,40 @@
+import React, { useRef } from "react";
 import { Text, View, TextInput, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { AuthStore, appSignIn } from "../../store.js";
 import { Stack, useRouter } from "expo-router";
-import { useRef } from "react";
 
 export default function LogIn() {
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
+  const onLogin = async () => {
+    const email = emailRef.current;
+    const password = passwordRef.current;
+
+    const resp = await appSignIn(email, password);
+    if (resp?.user) {
+      router.replace("/(tabs)/home");
+    } else {
+      console.log(resp.error);
+      Alert.alert("Login Error", resp.error?.message);
+    }
+  };
+
+  const onCreateAccount = () => {
+    AuthStore.update((s) => {
+      s.isLoggedIn = true;
+    });
+    router.push("/create-account");
+  };
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={styles.container}>
       <View>
         <Text style={styles.label}>Email</Text>
         <TextInput
-          placeholder=" "
+          placeholder="Enter your email"
+          placeholderTextColor="#999"
           autoCapitalize="none"
           nativeID="email"
           onChangeText={(text) => {
@@ -25,7 +46,8 @@ export default function LogIn() {
       <View>
         <Text style={styles.label}>Password</Text>
         <TextInput
-          placeholder=" "
+          placeholder="Enter your password"
+          placeholderTextColor="#999"
           secureTextEntry={true}
           nativeID="password"
           onChangeText={(text) => {
@@ -34,31 +56,10 @@ export default function LogIn() {
           style={styles.textInput}
         />
       </View>
-      <TouchableOpacity style={styles.button}>
-      <Text
-        onPress={async () => {
-          const resp = await appSignIn(emailRef.current, passwordRef.current);
-          if (resp?.user) {
-            router.replace("/(tabs)/home");
-           
-          } else {
-            console.log(resp.error)
-            Alert.alert("Login Error", resp.error?.message)
-          }
-        }}
-        style={styles.buttonText}
-      >
-        Login
-      </Text>
+      <TouchableOpacity style={styles.button} onPress={onLogin}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-      <Text
-        onPress={() => {
-          AuthStore.update((s) => {
-            s.isLoggedIn = true;
-          });
-          router.push("/create-account");
-        }}
-      >
+      <Text style={styles.createAccountText} onPress={onCreateAccount}>
         Create Account
       </Text>
     </View>
@@ -66,31 +67,42 @@ export default function LogIn() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   label: {
     borderBottomWidth: 1,
-    borderColor: '#1C3C6C',
+    borderColor: "#1C3C6C",
     marginBottom: 16,
     paddingVertical: 8,
     fontSize: 16,
   },
   textInput: {
-    width: 250,
+    width: 300,
+    height: 40,
     borderWidth: 1,
     borderRadius: 4,
     borderColor: "#1C3C6C",
     paddingHorizontal: 8,
-    paddingVertical: 4,
     marginBottom: 8,
+    color: "#1C3C6C",
   },
   button: {
-    backgroundColor: '#1C3C6C',
+    backgroundColor: "#1C3C6C",
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+    width: 300,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    textAlign: 'center',
-  }
+    textAlign: "center",
+  },
+  createAccountText: {
+    fontSize: 16,
+    color: "#1C3C6C",
+  },
 });
