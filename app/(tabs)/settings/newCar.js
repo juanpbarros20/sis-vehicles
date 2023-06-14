@@ -55,18 +55,21 @@ const AddVehicle = ({ setVehicles }) => {
       <TextInput
         style={styles.input}
         placeholder="Nome"
+        placeholderTextColor="#999"
         value={name}
         onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder="Marca"
+        placeholderTextColor="#999"
         value={brand}
         onChangeText={setBrand}
       />
       <TextInput
         style={styles.input}
         placeholder="Ano"
+        placeholderTextColor="#999"                                                                                  
         value={year}
         onChangeText={setYear}
         keyboardType="numeric"
