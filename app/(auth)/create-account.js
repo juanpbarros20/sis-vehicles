@@ -37,7 +37,7 @@ export default function CreateAccount() {
       <View>
         <Text style={styles.label}>Email</Text>
         <TextInput
-          placeholder="Enter your email"
+          placeholder="Digite seu email"
           placeholderTextColor="#999"
           nativeID="email"
           onChangeText={(text) => {
@@ -47,9 +47,9 @@ export default function CreateAccount() {
         />
       </View>
       <View>
-        <Text style={styles.label}>First Name</Text>
+        <Text style={styles.label}>Primeiro Nome</Text>
         <TextInput
-          placeholder="Enter your first name"
+          placeholder="Digite seu primeiro nome"
           placeholderTextColor="#999"
           nativeID="firstName"
           onChangeText={(text) => {
@@ -59,9 +59,9 @@ export default function CreateAccount() {
         />
       </View>
       <View>
-        <Text style={styles.label}>Last Name</Text>
+        <Text style={styles.label}>Último Nome</Text>
         <TextInput
-          placeholder="Enter your last name"
+          placeholder="Digite seu último nome"
           placeholderTextColor="#999"
           nativeID="lastName"
           onChangeText={(text) => {
@@ -71,9 +71,9 @@ export default function CreateAccount() {
         />
       </View>
       <View>
-        <Text style={styles.label}>Password</Text>
+        <Text style={styles.label}>Senha</Text>
         <TextInput
-          placeholder="Enter your password"
+          placeholder="Digite sua senha"
           placeholderTextColor="#999"
           secureTextEntry={true}
           nativeID="password"
@@ -84,10 +84,10 @@ export default function CreateAccount() {
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={onSaveUser}>
-        <Text style={styles.buttonText}>SAVE NEW USER</Text>
+        <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
       <Text style={styles.cancelText} onPress={onCancel}>
-        CANCEL
+        Voltar
       </Text>
     </View>
   );

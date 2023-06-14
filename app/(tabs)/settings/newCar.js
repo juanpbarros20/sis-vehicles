@@ -45,7 +45,7 @@ const AddVehicle = ({ setVehicles }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setPhoto(result.uri);
     }
   };

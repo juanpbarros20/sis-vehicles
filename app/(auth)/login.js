@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Text, View, TextInput, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { AuthStore, appSignIn } from "../../store.js";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LogIn() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function LogIn() {
       <View>
         <Text style={styles.label}>Email</Text>
         <TextInput
-          placeholder="Enter your email"
+          placeholder="Digite seu email"
           placeholderTextColor="#999"
           autoCapitalize="none"
           nativeID="email"
@@ -44,9 +45,9 @@ export default function LogIn() {
         />
       </View>
       <View>
-        <Text style={styles.label}>Password</Text>
+        <Text style={styles.label}>Senha</Text>
         <TextInput
-          placeholder="Enter your password"
+          placeholder="Digite sua senha"
           placeholderTextColor="#999"
           secureTextEntry={true}
           nativeID="password"
@@ -57,10 +58,10 @@ export default function LogIn() {
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
       <Text style={styles.createAccountText} onPress={onCreateAccount}>
-        Create Account
+        Registrar-se
       </Text>
     </View>
   );
@@ -73,13 +74,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   label: {
-    borderBottomWidth: 1,
     borderColor: "#1C3C6C",
-    marginBottom: 16,
-    paddingVertical: 8,
+    marginBottom: 4,
     fontSize: 16,
+    marginVertical: 18
   },
   textInput: {
+    
     width: 300,
     height: 40,
     borderWidth: 1,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     borderColor: "#1C3C6C",
     paddingHorizontal: 8,
     marginBottom: 8,
-    color: "#1C3C6C",
+    color: "black",
   },
   button: {
     backgroundColor: "#1C3C6C",
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   createAccountText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#1C3C6C",
   },
 });

@@ -27,7 +27,7 @@ const Tab2Index = () => {
             Alert.alert("Logout Error", resp.error?.message);
           }
         }}
-        title="LOGOUT"
+        title="Sair"
       />
         <View>
         <Text>

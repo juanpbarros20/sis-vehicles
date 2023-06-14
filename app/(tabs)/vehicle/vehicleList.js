@@ -60,15 +60,16 @@ const VehicleList = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
-    padding: 16,
+    padding: 8,
     backgroundColor: '#F9F9F9',
   },
   vehicleItem: {
-    marginBottom: 16,
+    marginBottom: 8,
     backgroundColor: '#FFF',
     borderRadius: 8,
-    padding: 25,
+    padding: 10,
     elevation: 2,
   },
   vehicleInfo: {

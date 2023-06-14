@@ -1,7 +1,7 @@
 import { Store } from 'pullstate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { onAuthStateChanged } from 'firebase/auth';
 import {
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -33,13 +33,6 @@ const subscribeToAuthStateChanges = () => {
     console.log('onAuthStateChange', user);
     setAuthenticatedUser(user);
   });
-};
-
-// Função para interromper a inscrição nas alterações do estado de autenticação
-const unsubscribeFromAuthStateChanges = () => {
-  if (unsubscribeAuthState) {
-    unsubscribeAuthState();
-  }
 };
 
 // Chamada inicial para se inscrever nas alterações do estado de autenticação
@@ -114,19 +107,41 @@ const initAuthenticatedUser = async () => {
 
   if (token) {
     try {
-      const userCredential = await signInWithCustomToken(auth, token);
+      const userCredential = await signInWithEmailAndPassword(auth, "user@example.com", "password");
       const user = userCredential.user;
       setAuthenticatedUser(user);
+      return { user };
     } catch (error) {
       console.log('Error initializing authenticated user:', error);
-      setAuthenticatedUser(null);
+      return { error };
     }
   } else {
     setAuthenticatedUser(null);
+    return { user: null };
   }
 };
 
+// Chamar a função de inicialização do usuário autenticado ao iniciar o aplicativo
 initAuthenticatedUser();
 
-// Exporte as funções adicionais que você utiliza na sua aplicação
-// ...
+// Função para remover o token de autenticação
+const removeAuthToken = async () => {
+  try {
+    await AsyncStorage.removeItem('authToken');
+  } catch (error) {
+    console.log('Error removing auth token:', error);
+  }
+};
+
+// Exportar a função para remover o token de autenticação
+export const removeAuth = () => {
+  removeAuthToken();
+};
+
+// Função para cancelar a inscrição nas alterações do estado de autenticação
+export const unsubscribeAuth = () => {
+  if (unsubscribeAuthState) {
+    unsubscribeAuthState();
+  }
+};
+
