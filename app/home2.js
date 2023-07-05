@@ -1,30 +1,24 @@
 import { View, Text, Button } from "react-native";
 import { Link, Stack, useRootNavigationState } from "expo-router";
 import { useRouter, useSegments } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { AuthStore } from "../store";
 
 export default function Home() {
   const segments = useSegments();
   const router = useRouter();
-  const { isLoggedIn } = AuthStore.useState((s) => s);
+  const { isLoggedIn } = AuthStore.useState();
   const navigationState = useRootNavigationState();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!navigationState?.key) return;
 
     const inAuthGroup = segments[0] === "(auth)";
 
-    if (
-      // If the user is not signed in and the initial segment is not anything in the auth group.
-      !isLoggedIn &&
-      !inAuthGroup
-    ) {
-      // Redirect to the sign-in page.
+    if (!isLoggedIn && !inAuthGroup) {
       router.replace("/login");
     } else if (isLoggedIn && inAuthGroup) {
-      // Redirect away from the sign-in page.
-      // router.replace("/");
+      router.replace("/");
     }
   }, [isLoggedIn, segments, navigationState?.key]);
 
@@ -45,7 +39,7 @@ export default function Home() {
                     AuthStore.update((s) => {
                       s.isLoggedIn = false;
                     });
-                    router.replace("/home");
+                    router.replace("/login");
                   }}
                   title="LOGOUT"
                 />

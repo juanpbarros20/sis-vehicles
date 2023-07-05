@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   updateProfile,
+  getAuth
 } from 'firebase/auth';
 import { app, auth, db } from './firebase-config';
 import { collection, addDoc } from 'firebase/firestore';
@@ -19,13 +20,21 @@ export const AuthStore = new Store({
 let unsubscribeAuthState;
 
 // Função para definir o usuário autenticado no estado e atualizar o estado de login
-const setAuthenticatedUser = (user) => {
+const setAuthenticatedUser = async (user) => {
   AuthStore.update((store) => {
     store.user = user;
     store.isLoggedIn = !!user;
     store.initialized = true;
   });
+
+  if (user) {
+    const token = await user.getIdToken();
+    await AsyncStorage.setItem("authToken", token);
+  } else {
+    await AsyncStorage.removeItem("authToken");
+  }
 };
+
 
 // Função para se inscrever nas alterações do estado de autenticação
 const subscribeToAuthStateChanges = () => {
@@ -82,48 +91,6 @@ export const appSignUp = async (email, password, displayName) => {
   }
 };
 
-// Funções para armazenar e recuperar o token de autenticação utilizando AsyncStorage
-const storeAuthToken = async (token) => {
-  try {
-    await AsyncStorage.setItem('authToken', token);
-  } catch (error) {
-    console.log('Error storing auth token:', error);
-  }
-};
-
-const getAuthToken = async () => {
-  try {
-    const token = await AsyncStorage.getItem('authToken');
-    return token;
-  } catch (error) {
-    console.log('Error getting auth token:', error);
-    return null;
-  }
-};
-
-// Chamada inicial para recuperar o token de autenticação e definir o usuário autenticado
-const initAuthenticatedUser = async () => {
-  const token = await getAuthToken();
-
-  if (token) {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, "user@example.com", "password");
-      const user = userCredential.user;
-      setAuthenticatedUser(user);
-      return { user };
-    } catch (error) {
-      console.log('Error initializing authenticated user:', error);
-      return { error };
-    }
-  } else {
-    setAuthenticatedUser(null);
-    return { user: null };
-  }
-};
-
-// Chamar a função de inicialização do usuário autenticado ao iniciar o aplicativo
-initAuthenticatedUser();
-
 // Função para remover o token de autenticação
 const removeAuthToken = async () => {
   try {
@@ -145,3 +112,34 @@ export const unsubscribeAuth = () => {
   }
 };
 
+// Função para recuperar o token de autenticação
+const getAuthToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem('authToken');
+    return token;
+  } catch (error) {
+    console.log('Error getting auth token:', error);
+    return null;
+  }
+};
+
+// Chamada inicial para recuperar o token de autenticação e definir o usuário autenticado
+const initAuthenticatedUser = async () => {
+  const token = await getAuthToken();
+  const auth = getAuth(app);
+
+  if (token) {
+    try {
+      await auth.signInWithEmailAndPassword("user@example.com", "password");
+    } catch (error) {
+      console.log('Error initializing authenticated user:', error);
+      return { error };
+    }
+  } else {
+    setAuthenticatedUser(null);
+    return { user: null };
+  }
+};
+
+// Chamar a função de inicialização do usuário autenticado ao iniciar o aplicativo
+initAuthenticatedUser();

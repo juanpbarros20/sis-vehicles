@@ -5,10 +5,8 @@ import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 
 const Index = () => {
-
   const segments = useSegments();
   const router = useRouter();
-
   const navigationState = useRootNavigationState();
 
   const { initialized, isLoggedIn } = AuthStore.useState();
@@ -20,12 +18,16 @@ const Index = () => {
 
     if (!isLoggedIn && !inAuthGroup) {
       router.replace("/login");
-    } else if (isLoggedIn) {
-      router.replace("/(tabs)/home");
+    } else if (isLoggedIn && inAuthGroup) {
+      router.replace("/");
     }
   }, [segments, navigationState?.key, initialized, isLoggedIn]);
 
-  return <View>{!navigationState?.key ? <Text>LOADING...</Text> : <></>}</View>;
+  return (
+    <View>
+      {!navigationState?.key ? <Text>LOADING...</Text> : null}
+    </View>
+  );
 };
 
 export default Index;
