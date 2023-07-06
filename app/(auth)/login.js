@@ -163,11 +163,11 @@ const styles = StyleSheet.create({
     borderColor: "#1C3C6C",
     paddingHorizontal: 8,
     marginBottom: 6,
-    color: "#1C3C6C",
+    color: "#000",
   },
   button: {
     backgroundColor: "#1C3C6C",
-    paddingVertical: 20,
+    paddingVertical: 18,
     borderRadius: 8,
     marginBottom: 8,
     width: 300,

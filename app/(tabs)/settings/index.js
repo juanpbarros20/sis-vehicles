@@ -2,6 +2,8 @@ import React from "react";
 import { Link, Redirect, Stack, useRouter } from "expo-router";
 import { View, Text, TouchableOpacity, SafeAreaView, Alert, StyleSheet } from "react-native";
 import UserAvatar from 'react-native-user-avatar';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { AntDesign } from '@expo/vector-icons';
 import { AuthStore, appSignOut } from "../../../store";
 
 const Tab2Index = () => {
@@ -26,42 +28,67 @@ const Tab2Index = () => {
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false, title: "Settings" }} />
 
-      <TouchableOpacity
-        style={styles.avatarContainer}
-        onPress={() => setShowLogoutButton(!showLogoutButton)}
-      >
-        <UserAvatar
-          onPress={handleSignOut}
-          name={displayName}
-          email={email}
-          size={60} // Reduzindo o tamanho do avatar
-          
-        />
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.avatarContainer}
+          onPress={() => setShowLogoutButton(!showLogoutButton)}
+        >
+          <UserAvatar
+            onPress={handleSignOut}
+            name={displayName}
+            email={email}
+            size={40}
+          />
+        </TouchableOpacity>
+      </View>
 
       {showLogoutButton && (
         <View style={styles.logoutButtonContainer}>
-          <Text style={styles.emailText}>{email}</Text>
           <Text style={styles.displayNameText}>{displayName}</Text>
+          <Text style={styles.emailText}>{email}</Text>
           
           <TouchableOpacity
             style={styles.logoutButton}
             onPress={handleSignOut}
           >
+            <AntDesign name="logout" style={styles.logoutButtonIcon} />
             <Text style={styles.logoutButtonText}>Sair</Text>
           </TouchableOpacity>
-
-
         </View>
       )}
 
       {!showLogoutButton && (
-        <View style={styles.buttonContainer}>
+        <View style={styles.menuContainer}>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.menuItem}
             onPress={() => router.replace("/settings/newCar")}
           >
-            <Text style={styles.buttonText}>Novo veículo</Text>
+            <Icon name="car" size={20} color="#1C3C6C" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Novo veículo</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => router.replace("/vehicle/vehicleEdit")}
+          >
+            <Icon name="edit" size={20} color="#1C3C6C" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Editar veículo</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => router.replace("/settings/reports")}
+          >
+            <Icon name="file" size={20} color="#1C3C6C" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Relatórios</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => router.replace("/settings/account")}
+          >
+            <Icon name="cog" size={20} color="#1C3C6C" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Ajuste de conta</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -72,53 +99,69 @@ const Tab2Index = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end', // Alinhar no canto superior direito
+  },
+  header: {
+    alignItems: 'flex-end',
+    marginTop: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   avatarContainer: {
-    marginTop: 30, // Reduzindo o espaço acima do avatar
+    marginRight: 30,
     right: 10
   },
   logoutButtonContainer: {
     marginTop: 10,
-    right: 15,
-    alignItems: 'center', // Centralizar horizontalmente
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+
   },
   logoutButton: {
-    backgroundColor: '#1C3C6C',
+    marginTop: 8,
+    backgroundColor: 'red',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
+
   },
   logoutButtonText: {
     color: '#fff',
-    fontFamily: "EncodeSansSemiCondensed_400Regular",
+    fontFamily: 'EncodeSansSemiCondensed_400Regular',
     fontSize: 16,
   },
-  emailText: {
-    fontFamily: "EncodeSansSemiCondensed_400Regular",
-    marginTop: 8,
+  logoutButtonIcon: {
+    color: '#fff',
+    fontSize: 16,
+    marginRight: 5,
   },
+  
   displayNameText: {
     fontFamily: "EncodeSansSemiCondensed_700Bold",
   },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-    alignItems: 'center', // Centralizar horizontalmente
-  },
-  button: {
-    backgroundColor: '#1C3C6C',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    right: 10
-  },
-  buttonText: {
-    color: '#fff',
+  emailText: {
     fontFamily: "EncodeSansSemiCondensed_400Regular",
+  },
+  menuContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 22,
+  },
+  menuIcon: {
+    marginRight: 8,
+  },
+  menuText: {
     fontSize: 16,
+    color: '#1C3C6C',
   },
 });
 

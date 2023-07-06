@@ -64,5 +64,5 @@ Cole as configurações do Firebase que você copiou do console na etapa 6 no ar
 Salve o arquivo de configuração.
 ```
 ```bash
-Pode ser necessario inserir o comando "npm install firebase".
+Pode ser necessário inserir o comando "npm install firebase".
 ```

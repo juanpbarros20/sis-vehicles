@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet } from 'react-native';
+import { Platform, Text, View, StyleSheet, DeviceEventEmitter } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 
 export default function VehicleDetails() {
@@ -12,7 +12,7 @@ export default function VehicleDetails() {
 
   useEffect(() => {
     (async () => {
-      if (Platform.OS === 'android' && !Device.isDevice) {
+      if (Platform.OS === 'android' && !DeviceEventEmitter.canUseListeners) {
         setErrorMsg(
           'Oops, this will not work on Snack in an Android Emulator. Try it on your device!'
         );
@@ -32,8 +32,8 @@ export default function VehicleDetails() {
             mapRef.current.animateToRegion({
               latitude: newLocation.coords.latitude,
               longitude: newLocation.coords.longitude,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.015
             });
           }
         }
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C3C6C',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    borderRadius: 24,
   },
   detailsContainer: {
     alignItems: 'center',

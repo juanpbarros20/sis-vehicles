@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Image, TouchableOpacity, Text, SafeAreaView } from 'react-native';
+import { View, TextInput, StyleSheet, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase-config';
 import * as ImagePicker from 'expo-image-picker';
@@ -48,10 +48,27 @@ const AddVehicle = ({ setVehicles }) => {
     });
   
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setPhoto(result.uri);
     }
   };
+
+  const handleTakePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Desculpe, precisamos de permissão para acessar a câmera e a galeria para adicionar fotos.');
+      return;
+    }
   
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      setPhoto(result.uri);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,10 +99,16 @@ const AddVehicle = ({ setVehicles }) => {
           keyboardType="numeric"
         />
       </View>
-      <TouchableOpacity style={styles.photoButton} onPress={handleSelectImage}>
-        <Ionicons name="image-outline" size={20} color="white" />
-        <Text style={styles.selectImageText}>Selecionar Imagem</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleSelectImage}>
+          <Ionicons name="image" size={20} color="white" />
+          <Text style={styles.selectImageText}>Galeria</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleTakePhoto}>
+          <Ionicons name="camera" size={20} color="white" />
+          <Text style={styles.selectImageText}>Foto</Text>
+        </TouchableOpacity>
+      </View>
       {photo && (
         <Image source={{ uri: photo }} style={styles.photo} />
       )}
@@ -93,7 +116,7 @@ const AddVehicle = ({ setVehicles }) => {
         <Text style={styles.buttonText}>Salvar</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.buttonVoltar} onPress={() => router.push('/settings')}>
-        <Text style={styles.buttonText}>Cancelar</Text>
+        <Text style={styles.buttonTextCancel}>Cancelar</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -102,7 +125,7 @@ const AddVehicle = ({ setVehicles }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 26
   },
   titleContainer: {
     alignItems: 'center',
@@ -111,33 +134,35 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#1C3C6C',
   },
   inputContainer: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 8,
   },
   input: {
-    width: '90%',
-    height: 40,
+    width: '100%',
+    height: 38,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 12,
+    marginBottom: 8,
     paddingLeft: 8,
     borderRadius: 8,
     backgroundColor: 'white',
   },
-  photoButton: {
-    left: 110,
-    marginBottom: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    backgroundColor: '#1C3C6C',
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '50%',
+    borderRadius: 4,
+    backgroundColor: '#1C3C6C',
+    padding: 8,
+    width: '48%',
   },
   selectImageText: {
     marginLeft: 8,
@@ -145,31 +170,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   buttonAdicionar: {
-    left: 110,
-    marginBottom: 12,
+    marginBottom: 8,
     paddingVertical: 8,
-    paddingHorizontal: 16,
     borderRadius: 8,
     backgroundColor: '#1C3C6C',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '50%',
   },
   buttonVoltar: {
-    left: 110,
-    marginBottom: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    marginBottom: 8,
+    paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: '#1C3C6C',
+    borderColor: '#1C3C6C',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '50%',
+    borderWidth: 1,
   },
   buttonText: {
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  buttonTextCancel: {
+    color: '#1C3C6C',
+    fontSize: 14,
   },
   photo: {
     width: '100%',
